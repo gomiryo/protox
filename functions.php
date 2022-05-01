@@ -69,15 +69,56 @@ function create_post_type(){
   );
 }
 
+// 出来事の日付を変換する
 function cnv_the_year($str)
 {
-	if($str == "") return "(時期不明)";	
-	$y = substr($str, 0, 4);
-	$m = substr($str, 4, 2);
-	$d = substr($str, 6, 2);
-	if($m == "00") return $y."年頃";
-	if($d == "00") return $y."年".ltrim($m,"0")."月頃";
-	return $y. "年". ltrim($m,"0"). "月". ltrim($d,"0"). "日";
+	if($str == "") return "(時期不明)";
+
+  // 正の数 & 8桁の時
+  if(intval($str) >= 0 && strlen($str) === 8) {	
+	  $y = substr($str, 0, 4);
+    $y = ltrim($y, '0');
+	  $m = substr($str, 4, 2);
+	  $d = substr($str, 6, 2);
+	  if($m == "00") return $y."年頃";
+	  if($d == "00") return $y."年".ltrim($m,"0")."月頃";
+	  return $y. "年". ltrim($m,"0"). "月". ltrim($d,"0"). "日";
+  }
+
+  // 正の数 & 9桁以上の時
+  if(intval($str) >= 0 && strlen($str) > 9) {
+	  $y = substr($str, 0, 4);
+    $y = ltrim($y, '0');
+	  $m = substr($str, 4, 2);
+	  $d = substr($str, 6, 2);
+	  if($m == "00") return $y."年頃";
+	  if($d == "00") return $y."年".ltrim($m,"0")."月頃";
+	  return $y. "年". ltrim($m,"0"). "月". ltrim($d,"0"). "日";
+  }
+
+  // 負の数 & 8桁の時
+  if(intval($str) < 0 && strlen($str) === 9) {	
+	  $y = substr(abs($str), 0, 4);
+    $y = ltrim($y, '0');
+	  $m = substr(abs($str), 4, 2);
+	  $d = substr(abs($str), 6, 2);
+	  if($m == "00") return $y."年頃";
+	  if($d == "00") return $y."年".ltrim($m,"0")."月頃";
+	  return $y. "年". ltrim($m,"0"). "月". ltrim($d,"0"). "日";
+  }
+
+  // 負の数 & 9桁以上の時
+  if(intval($str) < 0 && strlen($str) > 9) {
+	  $y = substr(abs($str), 0, 5);
+    $y = ltrim($y, '0');
+	  $m = substr(abs($str), 4, 2);
+	  $d = substr(abs($str), 6, 2);
+	  if($m == "00") return "紀元前". $y."年頃";
+	  if($d == "00") return "紀元前". $y."年".ltrim($m,"0")."月頃";
+	  return "紀元前". $y. "年". ltrim($m,"0"). "月". ltrim($d,"0"). "日";
+  }
+
+
 }
 
 ?>
